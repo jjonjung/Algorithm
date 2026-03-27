@@ -1,31 +1,31 @@
 #include <iostream>
-#include <stack>
-
-using namespace std;
 
 int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-
     int K;
-    cin >> K;
+    std::cin >> K;
 
-    stack<int> st;
-    long long sum = 0;
+    int stack[100000];
+    int top = -1;
 
     for (int i = 0; i < K; i++) {
         int x;
-        cin >> x;
+        std::cin >> x;
 
         if (x == 0) {
-            sum -= st.top();
-            st.pop();
+            top--; // pop
         } else {
-            st.push(x);
-            sum += x;
+            top++;
+            stack[top] = x; // push
         }
     }
 
-    cout << sum << '\n';
+    long long sum = 0;
+
+    for (int i = 0; i <= top; i++) {
+        sum += stack[i];
+    }
+
+    std::cout << sum << std::endl;
+
     return 0;
 }
