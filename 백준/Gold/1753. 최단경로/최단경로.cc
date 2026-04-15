@@ -1,18 +1,17 @@
 #include <iostream>
 #include <vector>
 #include <queue>
-#include <utility>
 #include <limits>
 using namespace std;
 
-//다익스트라는 우선순위 큐 기반
+const int INF = numeric_limits<int>::max();
+
 int main() {
     ios::sync_with_stdio(false);
-    cin.tie(nullptr);
+    cin.tie(NULL);
 
     int V, E;
     cin >> V >> E;
-
     int K;
     cin >> K;
 
@@ -21,36 +20,35 @@ int main() {
     for (int i = 0; i < E; i++) {
         int u, v, w;
         cin >> u >> v >> w;
-        graph[u].push_back(make_pair(v, w));
+        graph[u].push_back({v, w});
     }
 
-    const int INF = numeric_limits<int>::max();
     vector<int> dist(V + 1, INF);
     dist[K] = 0;
 
-    // (거리, 정점) → 최소 힙
     priority_queue<
         pair<int, int>,
         vector<pair<int, int>>,
         greater<pair<int, int>>
     > pq;
 
-    pq.push(make_pair(0, K));
+    pq.push({0, K});
 
     while (!pq.empty()) {
-        int currentDist = pq.top().first;
-        int currentNode = pq.top().second;
+        int curDist = pq.top().first;
+        int curNode = pq.top().second;
         pq.pop();
 
-        if (currentDist > dist[currentNode]) continue;
+        if (curDist > dist[curNode]) continue;
 
-        for (size_t i = 0; i < graph[currentNode].size(); i++) {
-            int nextNode = graph[currentNode][i].first;
-            int weight   = graph[currentNode][i].second;
+        for (auto& next : graph[curNode]) {
+            int nextNode = next.first;
+            int weight = next.second;
+            int newDist = curDist + weight;
 
-            if (dist[nextNode] > currentDist + weight) {
-                dist[nextNode] = currentDist + weight;
-                pq.push(make_pair(dist[nextNode], nextNode));
+            if (newDist < dist[nextNode]) {
+                dist[nextNode] = newDist;
+                pq.push({newDist, nextNode});
             }
         }
     }
@@ -59,7 +57,7 @@ int main() {
         if (dist[i] == INF)
             cout << "INF\n";
         else
-            cout << dist[i] << '\n';
+            cout << dist[i] << "\n";
     }
 
     return 0;
